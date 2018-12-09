@@ -1213,16 +1213,16 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphEle);
 
-/*				var yaxe = {
+				var yaxe = {
 					type: 'linear',
 					ticks: {
-						// Include a dollar sign in the ticks
+						Include a dollar sign in the ticks
 						callback: function(value, index, values) {
 							return Math.round(value, l_y.dec) + l_y.suf;
 						}
 					},
 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-				}*/;
+				};
 		
 				if ( chartFrom1 != '' )
 				{
