@@ -1279,7 +1279,7 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphSpeed);
 
-				var yaxe = { 
+/*				var yaxe = { 
 					type: 'linear',
 					ticks: {
 						// Include a dollar sign in the ticks
@@ -1290,7 +1290,7 @@ var WPGPXMAPS = {
 					position: 'right',
 					scalePositionLeft: false,
 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-				};
+				}*/;
 							
 				if ( chartFrom2 != '' )
 				{
@@ -1322,18 +1322,18 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphHr);
 
-				var yaxe = {
-					type: 'linear',					
-					ticks: {
-						// Include a dollar sign in the ticks
-						callback: function(value, index, values) {
-							return Math.round(value, l_hr.dec) + l_hr.suf;
-						}
-					},
-					position: 'right',
-					scalePositionLeft: false,
-					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-				};
+// 				var yaxe = {
+// 					type: 'linear',					
+// 					ticks: {
+// 						// Include a dollar sign in the ticks
+// 						callback: function(value, index, values) {
+// 							return Math.round(value, l_hr.dec) + l_hr.suf;
+// 						}
+// 					},
+// 					position: 'right',
+// 					scalePositionLeft: false,
+// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+// 				};
 
 				hoptions.options.scales.yAxes.push(yaxe);
 				hoptions.data.datasets.push( wpgpxmapsGetDataset(lng.heartRate, myData.Items, color4, yaxe.id ) );			
@@ -1346,18 +1346,18 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphAtemp);
 
-				var yaxe = {
-					type: 'linear',
-					ticks: {
-						// Include a dollar sign in the ticks
-						callback: function(value, index, values) {
-							return Math.round(value, 1) + "°C";
-						}
-					},
-					position: 'right',
-					scalePositionLeft: false,
-					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-				};
+// 				var yaxe = {
+// 					type: 'linear',
+// 					ticks: {
+// 						// Include a dollar sign in the ticks
+// 						callback: function(value, index, values) {
+// 							return Math.round(value, 1) + "°C";
+// 						}
+// 					},
+// 					position: 'right',
+// 					scalePositionLeft: false,
+// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+// 				};
 				
 				hoptions.options.scales.yAxes.push(yaxe);
 				hoptions.data.datasets.push( wpgpxmapsGetDataset(lng.atemp, myData.Items, color7, yaxe.id ) );			
@@ -1371,18 +1371,18 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphCad, true);
 				
-				var yaxe = {
-					type: 'linear',
-					ticks: {
-						// Include a dollar sign in the ticks
-						callback: function(value, index, values) {
-							return Math.round(value, l_cad.dec) + l_cad.suf;
-						}
-					},
-					position: 'right',
-					scalePositionLeft: false,
-					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-				};
+// 				var yaxe = {
+// 					type: 'linear',
+// 					ticks: {
+// 						// Include a dollar sign in the ticks
+// 						callback: function(value, index, values) {
+// 							return Math.round(value, l_cad.dec) + l_cad.suf;
+// 						}
+// 					},
+// 					position: 'right',
+// 					scalePositionLeft: false,
+// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+// 				};
 									
 				hoptions.options.scales.yAxes.push(yaxe);
 				hoptions.data.datasets.push( wpgpxmapsGetDataset(lng.cadence, myData.Items, color5, yaxe.id) );
@@ -1395,18 +1395,18 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphGrade);
 
-				var yaxe = {
-					type: 'linear',					
-					ticks: {
-						// Include a dollar sign in the ticks
-						callback: function(value, index, values) {
-							return Math.round(value, l_grade.dec) + l_grade.suf;
-						}
-					},
-					position: 'right',
-					scalePositionLeft: false,
-					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-				};
+// 				var yaxe = {
+// 					type: 'linear',					
+// 					ticks: {
+// 						// Include a dollar sign in the ticks
+// 						callback: function(value, index, values) {
+// 							return Math.round(value, l_grade.dec) + l_grade.suf;
+// 						}
+// 					},
+// 					position: 'right',
+// 					scalePositionLeft: false,
+// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+// 				};
 				
 				_formats.push(l_grade);
 				hoptions.options.scales.yAxes.push(yaxe);
