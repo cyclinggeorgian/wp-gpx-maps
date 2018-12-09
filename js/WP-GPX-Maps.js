@@ -1213,34 +1213,34 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphEle);
 
-				var yaxe = {
-					type: 'linear',
-					ticks: {
-						// Include a dollar sign in the ticks
-						callback: function(value, index, values) {
-							return Math.round(value, l_y.dec) + l_y.suf;
-						}
-					},
-					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-				};
-		
-				if ( chartFrom1 != '' )
-				{
-					yaxe.min = chartFrom1;
-					yaxe.startOnTick = false;
-				}
-				else { 
-					yaxe.min = myData.Min; 
-				}
-				
-				if ( chartTo1 != '' )
-				{
-					yaxe.max = chartTo1;
-					yaxe.endOnTick = false;
-				}
-				else { 
-					yaxe.max = myData.Max; 
-				}
+// 				var yaxe = {
+// 					type: 'linear',
+// 					ticks: {
+// 						// Include a dollar sign in the ticks
+// 						callback: function(value, index, values) {
+// 							return Math.round(value, l_y.dec) + l_y.suf;
+// 						}
+// 					},
+// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+// 				};
+// 		
+// 				if ( chartFrom1 != '' )
+// 				{
+// 					yaxe.min = chartFrom1;
+// 					yaxe.startOnTick = false;
+// 				}
+// 				else { 
+// 					yaxe.min = myData.Min; 
+// 				}
+// 				
+// 				if ( chartTo1 != '' )
+// 				{
+// 					yaxe.max = chartTo1;
+// 					yaxe.endOnTick = false;
+// 				}
+// 				else { 
+// 					yaxe.max = myData.Max; 
+// 				}
 				_formats.push(l_y)
 				hoptions.options.scales.yAxes.push(yaxe);
 				hoptions.data.datasets.push( wpgpxmapsGetDataset(lng.altitude, myData.Items, color2, yaxe.id ));		
