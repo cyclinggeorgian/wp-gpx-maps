@@ -55,278 +55,278 @@ var WPGPXMAPS = {
 	
 	MapEngines : {
 		/* NOT WORKING AND TESTED! old code copy&pate */
-		GoogleMaps : function(){
-			this.map = null,
-			this.EventSelectChart = null,
-			this.Polylines = [],
-			this.init = function(targetElement, mapType, scrollWheelZoom, ThunderforestApiKey){
-				
-				var mapTypeIds = [];
-				for(var type in google.maps.MapTypeId) {
-					mapTypeIds.push(google.maps.MapTypeId[type]);
-				}
-				mapTypeIds.push("OSM1");
-				mapTypeIds.push("OSM2");
-				mapTypeIds.push("OSM3");
-				mapTypeIds.push("OSM4");
-				mapTypeIds.push("OSM5");
-				mapTypeIds.push("OSM6");
-				
-				var ngImageMarkers = [];
-				
-				switch (mapType)
-				{
-					case 'TERRAIN': { mapType = google.maps.MapTypeId.TERRAIN; break;}
-					case 'SATELLITE': { mapType = google.maps.MapTypeId.SATELLITE; break;}
-					case 'ROADMAP': { mapType = google.maps.MapTypeId.ROADMAP; break;}
-					case 'OSM1': { mapType = "OSM1"; break;}
-					case 'OSM2': { mapType = "OSM2"; break;}
-					case 'OSM3': { mapType = "OSM3"; break;}
-					case 'OSM4': { mapType = "OSM4"; break;}
-					case 'OSM5': { mapType = "OSM5"; break;}
-					case 'OSM6': { mapType = "OSM6"; break;}
-					default: { mapType = google.maps.MapTypeId.HYBRID; break;}
-				}
-				
-				if ( mapType == "TERRAIN" || mapType == "SATELLITE" || mapType == "ROADMAP" )
-				{
-					// google maps
-				} else {
-					// Show OpenStreetMaps credits
-					$(el_osm_credits).show();
-				}
-				
-				this.map = new google.maps.Map(el_map, {
-					mapTypeId: mapType,
-					scrollwheel: (zoomOnScrollWheel == 'true'),
-					mapTypeControlOptions: {
-						style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-						mapTypeIds: mapTypeIds
-					}
-				}); 
-					
-			
-				this.map.mapTypes.set("OSM1", new google.maps.ImageMapType({
-					getTileUrl: function(coord, zoom) {
-						return "https://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-					},
-					tileSize: new google.maps.Size(256, 256),
-					name: "OSM",
-					alt : "Open Street Map",
-					maxZoom: 18
-				}));
-
-				
-				this.map.mapTypes.set("OSM2", new google.maps.ImageMapType({
-					getTileUrl: function(coord, zoom) {
-						if (hasThunderforestApiKey)
-							return "https://a.tile.thunderforest.com/cycle/" + zoom + "/" + coord.x + "/" + coord.y + ".png?apikey=" + ThunderforestApiKey;
-						else
-							return "http://a.tile.opencyclemap.org/cycle/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-					},
-					tileSize: new google.maps.Size(256, 256),
-					name: "OCM",
-					alt : "Open Cycle Map",
-					maxZoom: 18
-				}));
-				
-				this.map.mapTypes.set("OSM4", new google.maps.ImageMapType({
-					getTileUrl: function(coord, zoom) {
-						if (hasThunderforestApiKey)
-							return "https://a.tile.thunderforest.com/transport/" + zoom + "/" + coord.x + "/" + coord.y + ".png?apikey=" + ThunderforestApiKey;
-						else
-							return "http://a.tile2.opencyclemap.org/transport/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-					},
-					tileSize: new google.maps.Size(256, 256),
-					name: "OCM-Tran",
-					alt : "Open Cycle Map - Transport",
-					maxZoom: 18
-				}));
-				
-				this.map.mapTypes.set("OSM5", new google.maps.ImageMapType({
-					getTileUrl: function(coord, zoom) {
-						if (hasThunderforestApiKey)
-							return "https://a.tile.thunderforest.com/landscape/" + zoom + "/" + coord.x + "/" + coord.y + ".png?apikey=" + ThunderforestApiKey;
-						else
-							return "http://a.tile3.opencyclemap.org/landscape/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-					},
-					tileSize: new google.maps.Size(256, 256),
-					name: "OCM-Land",
-					alt : "Open Cycle Map - Landscape",
-					maxZoom: 18
-				}));
-					
-				this.map.mapTypes.set("OSM6", new google.maps.ImageMapType({
-					getTileUrl: function(coord, zoom) {
-						return "https://tile2.maptoolkit.net/terrain/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-					},
-					tileSize: new google.maps.Size(256, 256),
-					name: "MTK-Terr",
-					alt : "MapToolKit - Terrain",
-					maxZoom: 18
-				}));
-						
-				
-				
-			},
-			this.AppPolylines = function(mapData, color1, currentIcon, startIcon, endIcon) {
-				
-				var points = [];
-				var lastCut=0;
-				var polylinenes = [];
-				var polyline_number=0;
-				var color=0;
-				for (i=0; i < mapData.length; i++) 
-				{	
-					if (mapData[i] == null)
-					{
-
-						var poly = new google.maps.Polyline({
-							path: points.slice(lastCut,i),
-							strokeColor: color,
-							strokeOpacity: .7,
-							strokeWeight: 4,
-							map: this.map
-						});
-						polylinenes.push(poly);
-						lastCut=i;
-						polyline_number= polyline_number +1;
-						//var p = new google.maps.LatLng(mapData[i-1][0], mapData[i-1][1]);
-						//points.push(p);
-						//bounds.extend(p);
-					}
-					else
-					{
-						var p = new google.maps.LatLng(mapData[i][0], mapData[i][1]);
-						points.push(p);
-						bounds.extend(p);			
-					}
-				}
-				
-				if (points.length != lastCut)
-				{
-					if ( polyline_number < color1.length)
-					{
-						color=color1[polyline_number];
-					}
-					else
-					{
-						color=color1[color1.length-1];
-					}
-					var poly = new google.maps.Polyline({
-						path: points.slice(lastCut),
-						strokeColor: color,
-						strokeOpacity: .7,
-						strokeWeight: 4,
-						map: this.map
-					});
-
-					polylinenes.push(poly);			
-					currentPoints = [];
-					polyline_number= polyline_number +1;
-				}
-				
-				if (startIcon != '')
-				{
-					var startIconImage = new google.maps.MarkerImage(startIcon);
-					var startMarker = new google.maps.Marker({
-							  position: points[0],
-							  map: this.map,
-							  title: "Start",
-							  animation: google.maps.Animation.DROP,
-							  icon: startIconImage,
-							  zIndex: 10
-						  });
-
-				}
-
-				if (endIcon != '')
-				{
-					var endIconImage = new google.maps.MarkerImage(endIcon);
-					var startMarker = new google.maps.Marker({
-							  position: points[ points.length -1 ],
-							  map: this.map,
-							  title: "Start",
-							  animation: google.maps.Animation.DROP,
-							  icon: endIconImage,
-							  zIndex: 10
-						  });
-				
-				}
-
-				var first = WPGPXMAPS.Utils.GetItemFromArray(mapData,0)
-				
-				if (currentIcon == '')
-				{
-					currentIcon = "https://maps.google.com/mapfiles/kml/pal4/icon25.png";
-				}
-				
-				var current = new google.maps.MarkerImage(currentIcon,
-					new google.maps.Size(32, 32),
-					new google.maps.Point(0,0),
-					new google.maps.Point(16, 16)
-				);
-				
-				var marker = new google.maps.Marker({
-					position: new google.maps.LatLng(first[0], first[1]),
-					title:"Start",
-					icon: current,
-					map: this.map,
-					zIndex: 10
-				});
-				
-				for (i=0; i < polylinenes.length; i++) 
-				{	
-
-					google.maps.event.addListener(polylinenes[i],'mouseover',function(event){
-						if (marker)
-						{
-							marker.setPosition(event.latLng);	
-							marker.setTitle(lng.currentPosition);
-							if (myChart)
-							{
-								var l1 = event.latLng.lat();
-								var l2 = event.latLng.lng();
-								var ci = getClosestIndex(mapData,l1,l2);
-								var activeElements = [];
-								var seriesLen = myChart.data.datasets.length;												
-								for(var i=0; i<seriesLen;i++)
-								{
-									activeElements.push(myChart.chart.getDatasetMeta(i).data[ci]);
-								}
-								if (activeElements.length > 0)
-								{
-									myChart.options.customLine.x = activeElements[0]._model.x;
-									if (isNaN(myChart.tooltip._eventPosition))
-									{
-										myChart.tooltip._eventPosition = {
-												x: activeElements[0]._model.x, 
-												y: activeElements[0]._model.y
-											};
-									}								
-									myChart.tooltip._active = activeElements;
-									myChart.tooltip.update(true);
-									myChart.draw();
-								}
-
-							}
-						}
-					});		
-				}
-				
-				
-				
-			},
-			this.AddWaypoints = function(waypoints, waypointIcon)
-			{
-				
-			},
-			this.MoveMarkerToPosition = function(LatLon, updateChart)
-			{
-				
-			}
-		},
-		
+// 		GoogleMaps : function(){
+// 			this.map = null,
+// 			this.EventSelectChart = null,
+// 			this.Polylines = [],
+// 			this.init = function(targetElement, mapType, scrollWheelZoom, ThunderforestApiKey){
+// 				
+// 				var mapTypeIds = [];
+// 				for(var type in google.maps.MapTypeId) {
+// 					mapTypeIds.push(google.maps.MapTypeId[type]);
+// 				}
+// 				mapTypeIds.push("OSM1");
+// 				mapTypeIds.push("OSM2");
+// 				mapTypeIds.push("OSM3");
+// 				mapTypeIds.push("OSM4");
+// 				mapTypeIds.push("OSM5");
+// 				mapTypeIds.push("OSM6");
+// 				
+// 				var ngImageMarkers = [];
+// 				
+// 				switch (mapType)
+// 				{
+// 					case 'TERRAIN': { mapType = google.maps.MapTypeId.TERRAIN; break;}
+// 					case 'SATELLITE': { mapType = google.maps.MapTypeId.SATELLITE; break;}
+// 					case 'ROADMAP': { mapType = google.maps.MapTypeId.ROADMAP; break;}
+// 					case 'OSM1': { mapType = "OSM1"; break;}
+// 					case 'OSM2': { mapType = "OSM2"; break;}
+// 					case 'OSM3': { mapType = "OSM3"; break;}
+// 					case 'OSM4': { mapType = "OSM4"; break;}
+// 					case 'OSM5': { mapType = "OSM5"; break;}
+// 					case 'OSM6': { mapType = "OSM6"; break;}
+// 					default: { mapType = google.maps.MapTypeId.HYBRID; break;}
+// 				}
+// 				
+// 				if ( mapType == "TERRAIN" || mapType == "SATELLITE" || mapType == "ROADMAP" )
+// 				{
+// 					// google maps
+// 				} else {
+// 					// Show OpenStreetMaps credits
+// 					$(el_osm_credits).show();
+// 				}
+// 				
+// 				this.map = new google.maps.Map(el_map, {
+// 					mapTypeId: mapType,
+// 					scrollwheel: (zoomOnScrollWheel == 'true'),
+// 					mapTypeControlOptions: {
+// 						style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+// 						mapTypeIds: mapTypeIds
+// 					}
+// 				}); 
+// 					
+// 			
+// 				this.map.mapTypes.set("OSM1", new google.maps.ImageMapType({
+// 					getTileUrl: function(coord, zoom) {
+// 						return "https://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+// 					},
+// 					tileSize: new google.maps.Size(256, 256),
+// 					name: "OSM",
+// 					alt : "Open Street Map",
+// 					maxZoom: 18
+// 				}));
+// 
+// 				
+// 				this.map.mapTypes.set("OSM2", new google.maps.ImageMapType({
+// 					getTileUrl: function(coord, zoom) {
+// 						if (hasThunderforestApiKey)
+// 							return "https://a.tile.thunderforest.com/cycle/" + zoom + "/" + coord.x + "/" + coord.y + ".png?apikey=" + ThunderforestApiKey;
+// 						else
+// 							return "http://a.tile.opencyclemap.org/cycle/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+// 					},
+// 					tileSize: new google.maps.Size(256, 256),
+// 					name: "OCM",
+// 					alt : "Open Cycle Map",
+// 					maxZoom: 18
+// 				}));
+// 				
+// 				this.map.mapTypes.set("OSM4", new google.maps.ImageMapType({
+// 					getTileUrl: function(coord, zoom) {
+// 						if (hasThunderforestApiKey)
+// 							return "https://a.tile.thunderforest.com/transport/" + zoom + "/" + coord.x + "/" + coord.y + ".png?apikey=" + ThunderforestApiKey;
+// 						else
+// 							return "http://a.tile2.opencyclemap.org/transport/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+// 					},
+// 					tileSize: new google.maps.Size(256, 256),
+// 					name: "OCM-Tran",
+// 					alt : "Open Cycle Map - Transport",
+// 					maxZoom: 18
+// 				}));
+// 				
+// 				this.map.mapTypes.set("OSM5", new google.maps.ImageMapType({
+// 					getTileUrl: function(coord, zoom) {
+// 						if (hasThunderforestApiKey)
+// 							return "https://a.tile.thunderforest.com/landscape/" + zoom + "/" + coord.x + "/" + coord.y + ".png?apikey=" + ThunderforestApiKey;
+// 						else
+// 							return "http://a.tile3.opencyclemap.org/landscape/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+// 					},
+// 					tileSize: new google.maps.Size(256, 256),
+// 					name: "OCM-Land",
+// 					alt : "Open Cycle Map - Landscape",
+// 					maxZoom: 18
+// 				}));
+// 					
+// 				this.map.mapTypes.set("OSM6", new google.maps.ImageMapType({
+// 					getTileUrl: function(coord, zoom) {
+// 						return "https://tile2.maptoolkit.net/terrain/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+// 					},
+// 					tileSize: new google.maps.Size(256, 256),
+// 					name: "MTK-Terr",
+// 					alt : "MapToolKit - Terrain",
+// 					maxZoom: 18
+// 				}));
+// 						
+// 				
+// 				
+// 			},
+// 			this.AppPolylines = function(mapData, color1, currentIcon, startIcon, endIcon) {
+// 				
+// 				var points = [];
+// 				var lastCut=0;
+// 				var polylinenes = [];
+// 				var polyline_number=0;
+// 				var color=0;
+// 				for (i=0; i < mapData.length; i++) 
+// 				{	
+// 					if (mapData[i] == null)
+// 					{
+// 
+// 						var poly = new google.maps.Polyline({
+// 							path: points.slice(lastCut,i),
+// 							strokeColor: color,
+// 							strokeOpacity: .7,
+// 							strokeWeight: 4,
+// 							map: this.map
+// 						});
+// 						polylinenes.push(poly);
+// 						lastCut=i;
+// 						polyline_number= polyline_number +1;
+// 						//var p = new google.maps.LatLng(mapData[i-1][0], mapData[i-1][1]);
+// 						//points.push(p);
+// 						//bounds.extend(p);
+// 					}
+// 					else
+// 					{
+// 						var p = new google.maps.LatLng(mapData[i][0], mapData[i][1]);
+// 						points.push(p);
+// 						bounds.extend(p);			
+// 					}
+// 				}
+// 				
+// 				if (points.length != lastCut)
+// 				{
+// 					if ( polyline_number < color1.length)
+// 					{
+// 						color=color1[polyline_number];
+// 					}
+// 					else
+// 					{
+// 						color=color1[color1.length-1];
+// 					}
+// 					var poly = new google.maps.Polyline({
+// 						path: points.slice(lastCut),
+// 						strokeColor: color,
+// 						strokeOpacity: .7,
+// 						strokeWeight: 4,
+// 						map: this.map
+// 					});
+// 
+// 					polylinenes.push(poly);			
+// 					currentPoints = [];
+// 					polyline_number= polyline_number +1;
+// 				}
+// 				
+// 				if (startIcon != '')
+// 				{
+// 					var startIconImage = new google.maps.MarkerImage(startIcon);
+// 					var startMarker = new google.maps.Marker({
+// 							  position: points[0],
+// 							  map: this.map,
+// 							  title: "Start",
+// 							  animation: google.maps.Animation.DROP,
+// 							  icon: startIconImage,
+// 							  zIndex: 10
+// 						  });
+// 
+// 				}
+// 
+// 				if (endIcon != '')
+// 				{
+// 					var endIconImage = new google.maps.MarkerImage(endIcon);
+// 					var startMarker = new google.maps.Marker({
+// 							  position: points[ points.length -1 ],
+// 							  map: this.map,
+// 							  title: "Start",
+// 							  animation: google.maps.Animation.DROP,
+// 							  icon: endIconImage,
+// 							  zIndex: 10
+// 						  });
+// 				
+// 				}
+// 
+// 				var first = WPGPXMAPS.Utils.GetItemFromArray(mapData,0)
+// 				
+// 				if (currentIcon == '')
+// 				{
+// 					currentIcon = "https://maps.google.com/mapfiles/kml/pal4/icon25.png";
+// 				}
+// 				
+// 				var current = new google.maps.MarkerImage(currentIcon,
+// 					new google.maps.Size(32, 32),
+// 					new google.maps.Point(0,0),
+// 					new google.maps.Point(16, 16)
+// 				);
+// 				
+// 				var marker = new google.maps.Marker({
+// 					position: new google.maps.LatLng(first[0], first[1]),
+// 					title:"Start",
+// 					icon: current,
+// 					map: this.map,
+// 					zIndex: 10
+// 				});
+// 				
+// 				for (i=0; i < polylinenes.length; i++) 
+// 				{	
+// 
+// 					google.maps.event.addListener(polylinenes[i],'mouseover',function(event){
+// 						if (marker)
+// 						{
+// 							marker.setPosition(event.latLng);	
+// 							marker.setTitle(lng.currentPosition);
+// 							if (myChart)
+// 							{
+// 								var l1 = event.latLng.lat();
+// 								var l2 = event.latLng.lng();
+// 								var ci = getClosestIndex(mapData,l1,l2);
+// 								var activeElements = [];
+// 								var seriesLen = myChart.data.datasets.length;												
+// 								for(var i=0; i<seriesLen;i++)
+// 								{
+// 									activeElements.push(myChart.chart.getDatasetMeta(i).data[ci]);
+// 								}
+// 								if (activeElements.length > 0)
+// 								{
+// 									myChart.options.customLine.x = activeElements[0]._model.x;
+// 									if (isNaN(myChart.tooltip._eventPosition))
+// 									{
+// 										myChart.tooltip._eventPosition = {
+// 												x: activeElements[0]._model.x, 
+// 												y: activeElements[0]._model.y
+// 											};
+// 									}								
+// 									myChart.tooltip._active = activeElements;
+// 									myChart.tooltip.update(true);
+// 									myChart.draw();
+// 								}
+// 
+// 							}
+// 						}
+// 					});		
+// 				}
+// 				
+// 				
+// 				
+// 			},
+// 			this.AddWaypoints = function(waypoints, waypointIcon)
+// 			{
+// 				
+// 			},
+// 			this.MoveMarkerToPosition = function(LatLon, updateChart)
+// 			{
+// 				
+// 			}
+// 		},
+// 		
 		Leaflet : function(){
 			this.Bounds = [],
 			this.lng = {},
@@ -1279,7 +1279,7 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphSpeed);
 
-/*				var yaxe = { 
+				var yaxe = { 
 					type: 'linear',
 					ticks: {
 						// Include a dollar sign in the ticks
@@ -1290,7 +1290,7 @@ var WPGPXMAPS = {
 					position: 'right',
 					scalePositionLeft: false,
 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-				}*/;
+				};
 							
 				if ( chartFrom2 != '' )
 				{
@@ -1322,18 +1322,18 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphHr);
 
-// 				var yaxe = {
-// 					type: 'linear',					
-// 					ticks: {
-// 						// Include a dollar sign in the ticks
-// 						callback: function(value, index, values) {
-// 							return Math.round(value, l_hr.dec) + l_hr.suf;
-// 						}
-// 					},
-// 					position: 'right',
-// 					scalePositionLeft: false,
-// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-// 				};
+				var yaxe = {
+					type: 'linear',					
+					ticks: {
+						// Include a dollar sign in the ticks
+						callback: function(value, index, values) {
+							return Math.round(value, l_hr.dec) + l_hr.suf;
+						}
+					},
+					position: 'right',
+					scalePositionLeft: false,
+					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+				};
 
 				hoptions.options.scales.yAxes.push(yaxe);
 				hoptions.data.datasets.push( wpgpxmapsGetDataset(lng.heartRate, myData.Items, color4, yaxe.id ) );			
@@ -1346,18 +1346,18 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphAtemp);
 
-// 				var yaxe = {
-// 					type: 'linear',
-// 					ticks: {
-// 						// Include a dollar sign in the ticks
-// 						callback: function(value, index, values) {
-// 							return Math.round(value, 1) + "°C";
-// 						}
-// 					},
-// 					position: 'right',
-// 					scalePositionLeft: false,
-// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-// 				};
+				var yaxe = {
+					type: 'linear',
+					ticks: {
+						// Include a dollar sign in the ticks
+						callback: function(value, index, values) {
+							return Math.round(value, 1) + "°C";
+						}
+					},
+					position: 'right',
+					scalePositionLeft: false,
+					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+				};
 				
 				hoptions.options.scales.yAxes.push(yaxe);
 				hoptions.data.datasets.push( wpgpxmapsGetDataset(lng.atemp, myData.Items, color7, yaxe.id ) );			
@@ -1371,18 +1371,18 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphCad, true);
 				
-// 				var yaxe = {
-// 					type: 'linear',
-// 					ticks: {
-// 						// Include a dollar sign in the ticks
-// 						callback: function(value, index, values) {
-// 							return Math.round(value, l_cad.dec) + l_cad.suf;
-// 						}
-// 					},
-// 					position: 'right',
-// 					scalePositionLeft: false,
-// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-// 				};
+				var yaxe = {
+					type: 'linear',
+					ticks: {
+						// Include a dollar sign in the ticks
+						callback: function(value, index, values) {
+							return Math.round(value, l_cad.dec) + l_cad.suf;
+						}
+					},
+					position: 'right',
+					scalePositionLeft: false,
+					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+				};
 									
 				hoptions.options.scales.yAxes.push(yaxe);
 				hoptions.data.datasets.push( wpgpxmapsGetDataset(lng.cadence, myData.Items, color5, yaxe.id) );
@@ -1395,18 +1395,18 @@ var WPGPXMAPS = {
 				
 				var myData = mergeArrayForChart(graphDist, graphGrade);
 
-// 				var yaxe = {
-// 					type: 'linear',					
-// 					ticks: {
-// 						// Include a dollar sign in the ticks
-// 						callback: function(value, index, values) {
-// 							return Math.round(value, l_grade.dec) + l_grade.suf;
-// 						}
-// 					},
-// 					position: 'right',
-// 					scalePositionLeft: false,
-// 					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
-// 				};
+				var yaxe = {
+					type: 'linear',					
+					ticks: {
+						// Include a dollar sign in the ticks
+						callback: function(value, index, values) {
+							return Math.round(value, l_grade.dec) + l_grade.suf;
+						}
+					},
+					position: 'right',
+					scalePositionLeft: false,
+					id: "y-axis-" + (hoptions.options.scales.yAxes.length + 1),
+				};
 				
 				_formats.push(l_grade);
 				hoptions.options.scales.yAxes.push(yaxe);
