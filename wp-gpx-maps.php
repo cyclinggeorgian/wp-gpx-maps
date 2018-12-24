@@ -14,7 +14,7 @@
 
 include 'wp-gpx-maps_utils.php';
 include 'wp-gpx-maps_admin.php';
-$leafletversion = 1.3.4;
+$leafletversion = "1.3.4";
 
 add_shortcode('sgpx','handle_WP_GPX_Maps_Shortcodes');
 add_shortcode('sgpxf','handle_WP_GPX_Maps_folder_Shortcodes');
