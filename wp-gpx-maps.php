@@ -15,6 +15,8 @@
 include 'wp-gpx-maps_utils.php';
 include 'wp-gpx-maps_admin.php';
 $leafletversion = "1.3.4";
+$leafletfullscreenversion = "1.4.5";
+$leafletmarkerclusterversion = "1.4.1";
 
 add_shortcode('sgpx','handle_WP_GPX_Maps_Shortcodes');
 add_shortcode('sgpxf','handle_WP_GPX_Maps_folder_Shortcodes');
@@ -66,13 +68,13 @@ function enqueue_WP_GPX_Maps_scripts() {
 
 	/* leaflet */
 	wp_register_style( 'leaflet', plugins_url( '/ThirdParties/leaflet/leaflet.css', __FILE__ ), array(), $leafletversion );
-	wp_enqueue_style( 'leaflet' );	wp_register_style( 'leaflet.markercluster', plugins_url( '/ThirdParties/Leaflet.markercluster-1.4.1/MarkerCluster.css', __FILE__ ), array(), "0" );	wp_enqueue_style( 'leaflet.markercluster' );		wp_register_style( 'leaflet.Photo', plugins_url( '/ThirdParties/Leaflet.Photo/Leaflet.Photo.css', __FILE__ ), array(), "0" );	wp_enqueue_style( 'leaflet.Photo' );
+	wp_enqueue_style( 'leaflet' );	wp_register_style( 'leaflet.markercluster', plugins_url( '/ThirdParties/Leaflet.markercluster/MarkerCluster.css', __FILE__ ), array(), "0" );	wp_enqueue_style( 'leaflet.markercluster' );		wp_register_style( 'leaflet.Photo', plugins_url( '/ThirdParties/Leaflet.Photo/Leaflet.Photo.css', __FILE__ ), array(), "0" );	wp_enqueue_style( 'leaflet.Photo' );
 	
-	wp_register_style( 'leaflet.fullscreen', plugins_url( '/ThirdParties/leaflet.fullscreen-1.1.4/Control.FullScreen.css', __FILE__ ), array(), $leafletversion );
+	wp_register_style( 'leaflet.fullscreen', plugins_url( '/ThirdParties/leaflet.fullscreen/Control.FullScreen.css', __FILE__ ), array(), $leafletversion );
 	wp_enqueue_style( 'leaflet.fullscreen' );
 
-	wp_register_script('leaflet', plugins_url( '/ThirdParties/leaflet/leaflet.js', __FILE__ ), array(),  $leafletversion );	wp_register_script('leaflet.markercluster', plugins_url( '/ThirdParties/Leaflet.markercluster-1.4.1/leaflet.markercluster.js', __FILE__ ), array('leaflet'), "0" );	wp_register_script('leaflet.Photo', plugins_url( '/ThirdParties/Leaflet.Photo/Leaflet.Photo.js', __FILE__ ), array('leaflet','leaflet.markercluster'), "0" );
-	wp_register_script('leaflet.fullscreen', plugins_url( '/ThirdParties/leaflet.fullscreen-1.1.4/Control.FullScreen.js', __FILE__ ), array('leaflet'), "1.1.4" );
+	wp_register_script('leaflet', plugins_url( '/ThirdParties/leaflet/leaflet.js', __FILE__ ), array(),  $leafletversion );	wp_register_script('leaflet.markercluster', plugins_url( '/ThirdParties/Leaflet.markercluster/leaflet.markercluster.js', __FILE__ ), array('leaflet'), "0" );	wp_register_script('leaflet.Photo', plugins_url( '/ThirdParties/Leaflet.Photo/Leaflet.Photo.js', __FILE__ ), array('leaflet','leaflet.markercluster'), "0" );
+	wp_register_script('leaflet.fullscreen', plugins_url( '/ThirdParties/leaflet.fullscreen/Control.FullScreen.js', __FILE__ ), array('leaflet'), $leafletfullscreenversion );
 
 	/* chartjs */
 	wp_register_script('chartjs', plugins_url( '/js/Chart.min.js', __FILE__ ), array(), "2.7.2" );
